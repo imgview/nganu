@@ -1,0 +1,20 @@
+# Gunakan base image OpenJDK (versi 17 atau sesuai kebutuhan)
+FROM openjdk:17-jdk-alpine
+
+# Tentukan direktori kerja di dalam container
+WORKDIR /app
+
+# Salin semua file dari proyek ke dalam container
+COPY . /app
+
+# Install Gradle (jika belum terinstal)
+RUN wget https://services.gradle.org/distributions/gradle-7.4-bin.zip && \
+    unzip gradle-7.4-bin.zip && \
+    mv gradle-7.4 /opt/gradle && \
+    ln -s /opt/gradle/bin/gradle /usr/bin/gradle
+
+# Jalankan build Gradle (untuk menghasilkan file JAR)
+RUN gradle build
+
+# Jalankan aplikasi Java
+CMD ["java", "-jar", "build/libs/MyJavaApp.jar"]
